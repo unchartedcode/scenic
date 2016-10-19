@@ -23,8 +23,8 @@ module Scenic
     end
 
     def path
-        File.join("db", "views", filename)
-      end
+      File.join("db", "views", filename)
+    end
 
     def version
       @version.to_s.rjust(2, "0")
