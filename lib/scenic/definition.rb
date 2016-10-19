@@ -14,13 +14,17 @@ module Scenic
       end
     end
 
+    def name
+      @name
+    end
+
     def full_path
       Rails.root.join(path)
     end
 
     def path
-      File.join("db", "views", filename)
-    end
+        File.join("db", "views", filename)
+      end
 
     def version
       @version.to_s.rjust(2, "0")

@@ -17,7 +17,9 @@ module Scenic
       end
 
       def create_view_definition
-        if creating_new_view?
+        if view_erb_template?
+          template view_erb_path, definition.path
+        elsif creating_new_view?
           create_file definition.path
         else
           copy_file previous_definition.full_path, definition.full_path
@@ -75,6 +77,14 @@ module Scenic
 
       def creating_new_view?
         previous_version == 0
+      end
+
+      def view_erb_template?
+        File.exists?(view_erb_path)
+      end
+
+      def view_erb_path
+        File.join(views_directory_path, "#{definition.name}.sql.erb")
       end
 
       def definition
