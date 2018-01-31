@@ -30,12 +30,12 @@ module Scenic
         if creating_new_view? || destroying_initial_view?
           migration_template(
             "db/migrate/create_view.erb",
-            "db/migrate/create_#{plural_file_name}.rb",
+            "db/migrate/create_#{plural_file_name.gsub('.', '_')}.rb",
           )
         else
           migration_template(
             "db/migrate/update_view.erb",
-            "db/migrate/update_#{plural_file_name}_to_version_#{version}.rb",
+            "db/migrate/update_#{plural_file_name.gsub('.', '_')}_to_version_#{version}.rb",
           )
         end
       end
@@ -56,9 +56,13 @@ module Scenic
           @version ||= destroying? ? previous_version : previous_version.next
         end
 
+        def class_name
+          (class_path + file_name.split('.')).map!{ |m| m.camelize }.join('')
+        end
+
         def migration_class_name
           if creating_new_view?
-            "Create#{class_name.gsub('.', '').pluralize}"
+            "Create#{class_name.pluralize}"
           else
             "Update#{class_name.pluralize}ToVersion#{version}"
           end
@@ -88,7 +92,7 @@ module Scenic
       end
 
       def view_erb_template?
-        File.exists?(view_erb_path)
+        File.exist?(view_erb_path)
       end
 
       def view_erb_path
@@ -104,7 +108,7 @@ module Scenic
       end
 
       def plural_file_name
-        @plural_file_name ||= file_name.pluralize.gsub(".", "_")
+        @plural_file_name ||= file_name.pluralize
       end
 
       def destroying?
