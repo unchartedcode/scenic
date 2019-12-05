@@ -4,10 +4,11 @@ module Scenic
     #
     # Defualts to an instance of {Adapters::Postgres}
     # @return Scenic adapter
-    attr_accessor :database
+    attr_accessor :database, :root
 
     def initialize
       @database = Scenic::Adapters::Postgres.new
+      @root = Rails.root
     end
   end
 
